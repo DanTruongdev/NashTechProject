@@ -1,0 +1,52 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryManagement.Application.Dtos.LoginDto
+@{
+    Layout = "~/Areas/Authentication/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Login";
+}
+<div class="main">
+
+    <!-- Sing in  Form -->
+    <section class="sign-in">
+        <div class="container">
+            <div class="signin-content">
+                <div class="signin-image">
+                    <figure><img src="/images/signin-image.jpg" alt="sing up image"></figure>
+                    <a asp-area="Authentication" asp-controller="Authentication" asp-action="SignUp" class="signup-image-link">Create an account</a>
+                </div>
+
+                <div class="signin-form">
+                    <h2 class="form-title">Login</h2>
+                    <p>@ViewBag.LoginError</p>
+                    <form method="POST" class="register-form" id="login-form" asp-area="Authentication" asp-controller="Authentication" asp-action="Login">
+                        <div class="form-group">
+                            <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" asp-for="Email" id="your_name" placeholder="Email" />
+                            <span style="color:red" asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                            <input type="password" asp-for="Password" id="your_pass" placeholder="Password" />
+                            <span style="color:red" asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="checkbox" asp-for="RememberMe" id="remember-me" class="agree-term" />
+                            <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
+                        </div>
+                        <div class="form-group form-button">
+                            <input type="submit" name="signin" id="signin" class="form-submit" value="Log in" />
+                        </div>
+                    </form>
+                    <div class="social-login">
+                        <span class="social-label">Or login with</span>
+                        <ul class="socials">
+                            <li><a asp-area="Authentication" asp-controller="Authentication" asp-action="SignInGoogle"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

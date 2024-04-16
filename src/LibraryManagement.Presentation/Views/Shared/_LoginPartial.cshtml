@@ -1,0 +1,33 @@
+﻿@using LibraryManagement.Core.Entities;
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+
+    var customClaim = User.Identities.First().Claims.LastOrDefault(c => c.Type == ClaimTypes.Name);
+    var emailClaim = User.Identities.First().Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+    var 
+    <a id="logout" asp-area="Authentication" asp-controller="Authentication" asp-action="Logout">
+        <span>
+            <i>@customClaim?.Value</i>
+        </span>
+          </a>
+    <a asp-controller="Home" asp-action="UserInfo">
+        <i class="fa fa-user" aria-hidden="true"></i>
+     </a>
+    
+}
+else
+{
+    <a asp-area="Authentication" asp-controller="Authentication" asp-action="Login">
+        <span>
+            Login
+        </span>
+    </a>
+}
+

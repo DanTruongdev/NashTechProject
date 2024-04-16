@@ -1,0 +1,90 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryManagement.Application.Dtos.SignUpDto
+@{
+    Layout = "~/Areas/Authentication/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Sign Up";
+}
+<div class="main">
+    <section class="signup ">
+        <div class="container">
+            <div class="signup-content">
+                <div class="signup-form">
+                    <h2 class="form-title">Sign up</h2>
+                    <p>@ViewBag.SignUpError</p>
+                    <form method="POST" class="register-form" id="register-form" asp-area="Authentication" asp-controller="Authentication" asp-action="SignUp">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" id="first-name" asp-for="FirstName" placeholder="Your First Name" />
+                            <span style="color:red" asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" id="last-name" asp-for="LastName" placeholder="Your Last Name" />
+                            <span style="color:red" asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="zmdi zmdi-email"></i></label>
+                            <input type="email" id="email" asp-for="Email" placeholder="Your Email" />
+                            <span style="color:red" asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                            <input type="password" id="pass" asp-for="Password" placeholder="Password" />
+                            <span style="color:red" asp-validation-for="Password" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                            <input type="password" asp-for="ConfirmPass" id="re_pass" placeholder="Repeat your password" />
+                            <span style="color:red" asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <span id="password-match-message" class="text-danger"></span>
+                        <div class="form-group form-button">
+                            <input type="submit" name="signup" id="signup" class="form-submit" value="Register" />
+                        </div>
+
+                    </form>
+                </div>
+                <div class="signup-image">
+                    <figure><img src="/images/signup-image.jpg" alt="sing up image"></figure>
+                    <a asp-area="Authentication" asp-controller="Authentication" asp-action="Login" class="signup-image-link">I am already member</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+            var passwordInput = document.getElementById('pass');
+            var confirmPasswordInput = document.getElementById('re_pass');
+
+
+            var message = document.getElementById('password-match-message');
+
+
+            function validatePassword() {
+                if (passwordInput.value === confirmPasswordInput.value) {
+                    message.textContent = 'Passwords match';
+                    message.style.color = 'green'
+                    message.classList.remove('text-danger');
+                    message.classList.add('text-success');
+                } else {
+                    message.textContent = 'Passwords do not match';
+                    message.classList.remove('text-success');
+                    message.style.color = 'red'
+                    message.classList.add('text-danger');
+                }
+            }
+            // Add event listener to both password fields
+            passwordInput.addEventListener('keyup', validatePassword);
+            confirmPasswordInput.addEventListener('keyup', validatePassword);
+        });
+
+
+
+    </script>

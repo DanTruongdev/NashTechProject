@@ -1,0 +1,17 @@
+﻿@using LibraryManagement.Core.Entities;
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var customClaim = User.Identities.First().Claims.LastOrDefault(c => c.Type == ClaimTypes.Name);
+    <i>Hello @customClaim?.Value</i>
+}
+else
+{
+    <i>Hello Guest</i>
+}
+

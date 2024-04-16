@@ -1,0 +1,62 @@
+# Ignore the bin and obj directories
+bin/
+obj/
+
+# Ignore user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio files
+.vscode/
+.vs/
+
+# Ignore NuGet packages
+*.nuget.props
+*.nuget.targets
+*.lock.json
+/packages/
+
+# Ignore build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache files
+*.cache
+*.log
+*.vspscc
+*.vsp
+*.pidb
+*.userprefs
+*.dll
+*.exe
+
+# Rider
+.idea/
+
+# Resharper
+_ReSharper*/
+*.ReSharper*/
+*.sln.idea
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Include global files
+*.asax
+*.config
+*.json

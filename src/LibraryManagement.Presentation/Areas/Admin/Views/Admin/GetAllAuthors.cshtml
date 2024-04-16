@@ -1,0 +1,72 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<LibraryManagement.Core.Entities.Author>;
+@{
+
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Author";
+    int order = 0;
+    var parms = new Dictionary<string, string>();
+    parms.Add("authorId", "");
+
+}
+
+<div class="col">
+    <div class="container mb-2">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form asp-area="Admin" asp-controller="Admin" asp-action="GetAllAuthors" method="get">
+                    <div class="input-group">
+                        <input name="searchString" value="@ViewData["SearchString"]" class="form-control" type="text" placeholder="Search..." aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <a class="btn btn-outline-primary rounded mb-3" role="button"
+       asp-area="Admin" asp-controller="Admin" asp-action="AddAuthor">
+        Add new author
+    </a>
+    <div class="card">
+        <div class="card-header">
+            <strong class="card-title">All Authors</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Author name</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var author in Model)
+                    {
+                        order++;
+                        parms["authorId"] = author.AuthorId;
+                        <tr>
+                            <th scope="row">@order</th>
+                            <td>@author.AuthorName</td>
+                            <td>
+                                <a class="btn btn-outline-success rounded" role="button"
+                                   asp-area="Admin" asp-controller="Admin" asp-action="EditAuthor"
+                                   asp-all-route-data="parms">
+                                    Edit
+                                </a>
+                                <a class="btn btn-outline-danger rounded" role="button"
+                                   asp-area="Admin" asp-controller="Admin" asp-action="RemoveAuthor"
+                                   asp-all-route-data="parms">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

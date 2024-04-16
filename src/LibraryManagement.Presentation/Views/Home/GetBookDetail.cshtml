@@ -1,0 +1,64 @@
+﻿@using LibraryManagement.Core.Entities;
+@model LibraryManagement.Core.Entities.Book
+@{
+    ViewData["Title"] = "Book Detail";
+    Layout = "/Views/Shared/_MyLayout.cshtml";
+    string bookStatus = Model.UrlDownLoad != null ? "Online Available" : "Not Available";
+    var parms = new Dictionary<string, string>();
+}
+<link href="/css/book-details/style.css" rel="stylesheet">
+<div class="container">
+    <!-- Left Column / Headphones Image -->
+    <div class="left-column mr-5 mt-5">
+        <img class="active" height="100%" src="@Model?.Image" alt="BookImage">
+    </div>
+
+
+    <!-- Right Column -->
+    <div class="right-column">
+
+        <!-- Product Description -->
+        <div class="product-description">
+            <span>@Model.Category.CategoryName</span>
+            <h1>@Model.BookName</h1>
+            <p>@Model.BookDescription</p>
+        </div>
+
+        <!-- Product Configuration -->
+        <div class="product-configuration">
+            @{
+                string authorBook = "";
+                foreach (var ab in Model.AuthorBooks)
+                {
+                    authorBook += $"{ab.Author.AuthorName}, ";
+                }
+                authorBook = authorBook.Remove(authorBook.Length - 2);
+            }
+            <!-- Product Color -->
+            <div class="product-color">
+                <span><strong>Book Code: </strong>@Model.BookCode</span> <br />
+                <span><strong>Author: </strong>@authorBook</span> <br />
+                <span><strong>Download Available: </strong>@Model.Available</span> <br />
+                <span><strong>Number of Download: </strong>@Model.DownloadCount</span> <br />
+                <span><strong>Status: </strong>@bookStatus</span>
+            </div>
+        </div>
+
+        <!-- Product Pricing -->
+        <div class="product-price">      
+            @if (Model.Available > 0 && Model.UrlDownLoad != null)
+            {
+                parms["bookId"] = Model.BookId;
+                parms["returnUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+                <a ap class="cart-btn" asp-controller="Home" asp-action="DownloadBook" asp-all-route-data="parms">Download</a>
+            }
+            else
+            {
+                <a href="#" class="cart-btn">Contact</a>
+
+            }
+        </div>
+    </div>
+</div>
+
+

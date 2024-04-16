@@ -1,0 +1,99 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<LibraryManagement.Application.Dtos.UserDto>;
+@{
+
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Users";
+    int order = 0;
+    var parms = new Dictionary<string, string>();
+    parms.Add("userId", "");
+    string activeOrDeactive = "";
+    string gender = "";
+}
+
+<div class="col">
+    
+    <div class="container mb-2">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form asp-area="Admin" asp-controller="Admin" asp-action="GetAllUsers" method="get">
+                    <div class="input-group">
+                        <input name="searchString" value="@ViewData["SearchString"]" class="form-control" type="text" placeholder="Search ..." aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <strong class="card-title">All Users</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">PhoneNumber</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Dob</th>
+                        <th scope="col">Avatar</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        order++;
+                        activeOrDeactive = user.IsActivated ? "Active" : "Deactive";
+                        gender = user.Gender ? "Female" : "Male";
+                        parms["userId"] = user.Id;
+                     
+
+                        <tr>
+                            <th scope="row">@order</th>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@gender</td>
+                            <td>@user.Dob</td>
+                            <td>@user.Avatar</td>
+                            <td>@user.Role</td>
+                            <td>@user.Address</td>
+                            <td>@activeOrDeactive</td>
+                            <td>
+                                @if (user.IsActivated)
+                                {
+                                    <a class="btn btn-outline-danger rounded" role="button"
+                                       asp-area="Admin" asp-controller="Admin" asp-action="ChangeUserStatus"
+                                       asp-all-route-data="parms">
+                                        Deactive
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-success rounded" role="button"
+                                       asp-area="Admin" asp-controller="Admin" asp-action="ChangeUserStatus"
+                                       asp-all-route-data="parms">
+                                        Active
+                                    </a>
+                                }
+                                
+                            </td>
+                        </tr>
+                    }             
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

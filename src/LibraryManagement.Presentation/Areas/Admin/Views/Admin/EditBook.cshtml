@@ -1,0 +1,95 @@
+﻿@using LibraryManagement.Core.Entities;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryManagement.Application.Dtos.BookDto;
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Add Book";
+    var categories = (List<Category>)ViewData["Categories"]!;
+    var authors = (List<Author>)ViewData["Authors"]!;
+    var currentBook = (Book)ViewData["CurrentBook"]!;
+}
+
+
+
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Edit book</h3>
+            </div>
+            <p class="text-danger  m-3">@ViewBag.EditBookMsg</p>
+            <form class="card-body card-block" method="post" asp-area="Admin" asp-controller="Admin" asp-action="EditBook" enctype="multipart/form-data">
+                <input asp-for="BookId" type="text" value="@currentBook.BookId" hidden>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Book Name:</strong></label>
+                    <input asp-for="BookName" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentBook.BookName">
+                    <span class="text-danger" asp-validation-for="BookName"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Book Code:</strong></label>
+                    <input asp-for="BookCode" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentBook.BookCode">
+                    <span class="text-danger" asp-validation-for="BookCode"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Category:</strong></label>
+                    <select asp-for="CategoryId">
+                        @foreach (var c in categories)
+                        {
+                            if (c.CategoryId.Equals(currentBook.CategoryId))
+                            {
+                                <option value="@c.CategoryId" selected>@c.CategoryName</option>
+                            } else
+                            {
+                                <option value="@c.CategoryId">@c.CategoryName</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Author:</strong></label> <br />
+                    <select class="col-6" asp-for="AuthorId" multiple>
+                        @foreach (var a in authors)
+                        {
+                            if (currentBook.AuthorBooks.Any(ab => ab.AuthorId.Equals(a.AuthorId)))
+                            {
+                                <option value="@a.AuthorId" selected>@a.AuthorName</option>
+                            }
+                            else
+                            {
+                                <option value="@a.AuthorId">@a.AuthorName</option>
+                            }
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="AuthorId"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Quantity:</strong></label>
+                    <input asp-for="Quantity" type="number" value="@currentBook.Available" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control">
+                    <span class="text-danger" asp-validation-for="Quantity"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Description:</strong></label>
+                    <input asp-for="BookDescription" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentBook.BookDescription">
+                    <span class="text-danger" asp-validation-for="BookDescription"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Upload:</strong></label>
+                    <input name="Image" type="file" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control">
+                    <span class="text-danger" asp-validation-for="Image"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label"><strong>Book Upload:</strong></label>
+                    <input name="Source" type="file" id="inputSuccess2i" class="form-control-success form-control">
+                    <span class="text-danger" asp-validation-for="Source"></span>
+                </div>
+                <div class="text-center">
+                    <!-- Center the button -->
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

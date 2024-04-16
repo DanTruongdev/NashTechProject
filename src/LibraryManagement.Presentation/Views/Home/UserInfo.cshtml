@@ -1,0 +1,68 @@
+﻿@using LibraryManagement.Core.Entities;
+@model LibraryManagement.Application.Dtos.UpdateUserDto
+@{
+    ViewData["Title"] = "User Info";
+    Layout = "/Views/Shared/_MyLayout.cshtml";
+    User currentUser = (User)ViewData["CurrentUser"];
+}
+<div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="text-success"><strong>User Information</strong></h3>
+            </div>
+            <span class="text-danger ml-3 mt-2">@ViewBag.EditUserMsg</span>
+            <form class="card-body card-block" method="post" asp-controller="Home" asp-action="UserInfo" enctype="multipart/form-data">
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label text-success"><strong>First Name:</strong></label>
+                    <input asp-for="FirstName" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.FirstName">
+                    <span class="text-danger" asp-validation-for="FirstName"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label text-success"><strong>Last Name:</strong></label>
+                    <input asp-for="LastName" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.LastName">
+                    <span class="text-danger" asp-validation-for="LastName"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class="form-control-label text-success"><strong>Email:</strong></label>
+                    <input type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.Email" disabled>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label text-success"><strong>Phone number:</strong></label>
+                    <input asp-for="PhoneNumber" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.PhoneNumber">
+                    <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label text-success"><strong>Gender:</strong></label>
+                    <select asp-for="Gender">
+                        <option value="false" selected>Male</option>
+                        @if (currentUser.Gender)
+                        {
+                            <option value="true" selected>Female</option>
+                        }
+                        else
+                        {
+                            <option value="true">Female</option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="Gender"></span>
+                </div>
+                <div class="has-success form-group">
+                    <label for="inputSuccess2i" class=" form-control-label text-success"><strong>DOB:</strong></label>
+                    <input asp-for="Dob" type="date" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.Dob.ToString("yyyy-MM-dd")">
+                    <span class="text-danger" asp-validation-for="Dob"></span>
+                </div>
+                <div class="has-success form-group">
+                <label for="inputSuccess2i" class=" form-control-label text-success"><strong>Address:</strong></label>
+                    <input asp-for="Address" type="text" id="inputSuccess2i" placeholder="enter here..." class="form-control-success form-control" value="@currentUser.Address">
+                    <span class="text-danger" asp-validation-for="Address"></span>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success btn-md">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

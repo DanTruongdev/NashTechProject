@@ -1,0 +1,329 @@
+﻿@using LibraryManagement.Core.Entities;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@model List<LibraryManagement.Core.Entities.Book>
+@{
+    ViewData["Title"] = "Home";
+    Layout = "/Views/Shared/_MyLayout.cshtml";
+    var parms = new Dictionary<string, string>();
+}
+
+<!-- slider section -->
+<section class="slider_section long_section">
+    <div id="customCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="detail-box">
+                                <h1>
+                                    Wild Houses 
+                                  
+                                </h1>
+                                <p>
+                                    The riotous, raucous and deeply resonant debut novel from "one of the best story writers in the English language today" (Financial Times)
+                                    Wild Houses follows two outsiders caught in the crosshairs of a small-town revenge kidnapping gone awry...
+                                </p>
+                                <div class="btn-box">
+                                    <a href="https://localhost:7122/Home/GetBookDetail?bookId=484ac62e-46ea-417b-b9e3-afecbb5ace70" class="btn1">
+                                        Read more
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="img-box">
+                                <img height="400" src="https://images-us.bookshop.org/ingram/9780802160942.jpg?height=500&v=v2-b42004fed928c2ac36217fee89d2cde2" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="detail-box">
+                                <h1>
+                                    Expiration Dates
+                                </h1>
+
+                                <p>
+                                     From the New York Times bestselling author of In Five Years and One Italian Summer comes a love story that will define a generation.
+                                    Being single is like playing the lottery. There's always the chance that with one piece of paper you could win it all...
+                                </p>
+                                <div class="btn-box">
+                                    <a href="https://localhost:7122/Home/GetBookDetail?bookId=b7c74d17-e556-46c6-830d-9372ef1ed850" class="btn1">
+                                        Read more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="img-box">
+                                <img height="400" src="https://images-us.bookshop.org/ingram/9781982166823.jpg?height=500&v=v2-822e3316e6b34b7d41b9f5f346846681" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="detail-box">
+                                <h1>
+                                    The Mars House
+                                </h1>
+                                <p>
+                                    A compulsively readable queer sci-fi novel about a marriage of convenience between a Mars politician and an Earth refugee...
+                                </p>
+                                <div class="btn-box">
+                                    <a href="https://localhost:7122/Home/GetBookDetail?bookId=d366fad4-3e42-4b48-b637-d2688c827c91" class="btn1">
+                                        Read more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="img-box">
+                                <img src="https://images-us.bookshop.org/ingram/9781639732333.jpg?height=500&v=v2-01666d580b97cb4af73b3cc0cea67db3" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ol class="carousel-indicators">
+            <li data-target="#customCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#customCarousel" data-slide-to="1"></li>
+            <li data-target="#customCarousel" data-slide-to="2"></li>
+        </ol>
+    </div>
+</section>
+<!-- end slider section -->
+<!-- furniture section -->
+
+<section class="furniture_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                Newest Books
+            </h2>
+
+        </div>
+        <div class="row">
+            @foreach(var book in Model)
+            {
+                parms.Clear();
+                parms["bookId"] = book.BookId;
+                string authorBook = "";
+                foreach (var ab in book.AuthorBooks)
+                {
+                    authorBook += $"{ab.Author.AuthorName}, ";
+                }
+                authorBook = authorBook.Remove(authorBook.Length - 2);
+                <div class="col-md-6 col-lg-4">
+                    <div class="box">
+                        <a class="img-box" asp-controller="Home" asp-action="GetBookDetail" asp-all-route-data="@parms">
+                            <img src="@book.Image" alt="Book Image">
+                        </a>
+                        <div class="detail-box">
+                            <h5>
+                                @book.BookName
+                            </h5>
+                            <p>@authorBook</p>
+                            <div class="price_box">
+                                <h9 class="price_heading">
+                                    <span>Download: </span>@book.DownloadCount
+                                </h9>
+                                <h9 class="price_heading">
+                                    <span>Available: </span>@book.Available
+                                </h9>
+
+                                @{
+                                    parms["returnUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+                                    if (book.Available > 0 && book.UrlDownLoad != null)
+                                    {
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <a class="btn-success p-2" style="color:white" asp-controller="Home" asp-action="DownloadBook" asp-all-route-data="parms">
+                                                Download
+                                            </a>
+
+                                        }
+                                        else
+                                        {
+                                            <a class="btn-success p-2" style="color:white" asp-area="Authentication" asp-controller="Authentication" asp-action="Login">
+                                                Download
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-success p-2" style="color:white" href="#">
+                                            Contact
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+          
+           
+        </div>
+    </div>
+    @{
+        parms.Clear();
+        parms.Add("categoryId", "All");
+        parms.Add("orderByName", "A to Z");
+        parms.Add("keyword", " ");
+        parms.Add("page", "1");
+    }
+    <div class="view-all text-center">
+        <a <a asp-controller="Home" asp-action="AllBooks" asp-all-route-data="parms">
+            View More
+        </a>
+    </div>
+
+
+</section>
+
+
+<!-- end furniture section -->
+<!-- about section -->
+<section class="about_section layout_padding long_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="images/about-img.png" alt="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>
+                            About Us
+                        </h2>
+                    </div>
+                    <p>
+                         Happy Library are a haven for curious minds, a sanctuary for the intellectually adventurous, and a hub for lifelong learners.
+                        At Happy Library, we curate a diverse selection of literature, spanning from timeless classics to contemporary bestsellers,
+                        catering to readers of all ages and interests. Our shelves hold treasures waiting to be discovered, offering endless opportunities for enlightenment, 
+                        entertainment, and inspiration.
+                    </p>
+                    <a asp-controller="Home" asp-action="AboutUs">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- end about section -->
+<!-- client section -->
+
+<section class="client_section layout_padding-bottom">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                Testimonial
+            </h2>
+        </div>
+        <div id="carouselExample2Controls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-md-11 col-lg-10 mx-auto">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="images/client.jpg" alt="" />
+                                </div>
+                                <div class="detail-box">
+                                    <div class="name">
+                                        <i class="fa fa-quote-left" aria-hidden="true"></i>
+                                        <h6>
+                                            Siaalya
+                                        </h6>
+                                    </div>
+                                    <p>
+                                        It is a long established fact that a reader will be
+                                        distracted by the readable cIt is a long established fact
+                                        that a reader will be distracted by the readable c
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-11 col-lg-10 mx-auto">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="images/client.jpg" alt="" />
+                                </div>
+                                <div class="detail-box">
+                                    <div class="name">
+                                        <i class="fa fa-quote-left" aria-hidden="true"></i>
+                                        <h6>
+                                            Siaalya
+                                        </h6>
+                                    </div>
+                                    <p>
+                                        It is a long established fact that a reader will be
+                                        distracted by the readable cIt is a long established fact
+                                        that a reader will be distracted by the readable c
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-11 col-lg-10 mx-auto">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="images/client.jpg" alt="" />
+                                </div>
+                                <div class="detail-box">
+                                    <div class="name">
+                                        <i class="fa fa-quote-left" aria-hidden="true"></i>
+                                        <h6>
+                                            Siaalya
+                                        </h6>
+                                    </div>
+                                    <p>
+                                        It is a long established fact that a reader will be
+                                        distracted by the readable cIt is a long established fact
+                                        that a reader will be distracted by the readable c
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel_btn-container">
+                <a class="carousel-control-prev" href="#carouselExample2Controls" role="button" data-slide="prev">
+                    <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExample2Controls" role="button" data-slide="next">
+                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- end client section -->

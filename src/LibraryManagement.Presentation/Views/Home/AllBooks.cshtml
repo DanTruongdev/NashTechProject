@@ -1,0 +1,201 @@
+﻿@using LibraryManagement.Core.Entities;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@model List<LibraryManagement.Core.Entities.Book>
+@{
+    ViewData["Title"] = "All Books";
+    Layout = "/Views/Shared/_MyLayout.cshtml";
+    var categories = (List<Category>) ViewData["Categories"];
+    int currentPage = (int) ViewData["CurrentPage"];
+    int totalPage = (int) ViewData["TotalPage"];
+    string categoryId = ViewData["CategoryId"].ToString();
+    string orderByName = ViewData["OrderByName"].ToString();
+    string keyword = ViewData["Keyword"].ToString();
+    var parms = new Dictionary<string, string>();
+}
+<!-- furniture section -->
+<div class="s003">
+    <form method="GET" asp-controller="Home" asp-action="AllBooks">
+        <div class="inner-form rounded">
+            <div class="input-field first-wrap pt-3">
+                <div class="input-select ">
+                    <select  data-trigger="" name="categoryId">
+                        <option value="All" selected>All</option>
+                        @foreach(var c in categories)
+                        {
+                            if (c.CategoryId.Equals(categoryId))
+                            {
+                                <option value="@c.CategoryId" selected>@c.CategoryName</option>
+                            }
+                            else
+                            {
+                                <option value="@c.CategoryId">@c.CategoryName</option>
+
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-field first-wrap pt-3">
+                <div class="input-select ">
+                    <select data-trigger="" name="orderByName">
+                        <option value="A to Z" selected>A to Z</option>
+                        @if (orderByName.StartsWith("Z"))
+                        {
+
+                            <option value="Z to A" selected>Z to A</option>
+                        }
+                        else
+                        {
+                            <option value="Z to A">Z to A</option>
+                        }
+                       
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-field second-wrap">
+                 <input id="search" name="keyword" type="text" value="@keyword" placeholder="Enter book name, book Code or author..." />
+            </div>
+            <input name="page" value="1" hidden />
+            <div class="input-field third-wrap">
+                <button class="btn-search" type="submit">
+                    <svg class="svg-inline--fa fa-search fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<section class="furniture_section layout_padding">
+    <div class="container">
+
+        <div class="row">
+             @foreach(var book in Model)
+            {
+                parms.Clear();
+                parms["bookId"] = book.BookId;
+                string authorBook = "";
+                foreach (var ab in book.AuthorBooks)
+                {
+                    authorBook += $"{ab.Author.AuthorName}, ";
+                }
+                authorBook = authorBook.Remove(authorBook.Length - 2);
+                <div class="col-md-6 col-lg-4">
+                    <div class="box">
+                        <a class="img-box" asp-controller="Home" asp-action="GetBookDetail" asp-all-route-data="@parms">
+                            <img src="@book.Image" alt="Book Image">
+                        </a>
+                        <div class="detail-box">
+                            <h5>
+                               @book.BookName
+                            </h5>
+                            <p>@authorBook</p>
+                            <div class="price_box">
+                                <h9 class="price_heading">
+                                    <span>Download: </span>@book.DownloadCount
+                                </h9>
+                                <h9 class="price_heading">
+                                    <span>Available: </span>@book.Available
+                                </h9>
+                                
+                                @{
+                                    parms["returnUrl"] = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+                                    if (book.Available > 0 && book.UrlDownLoad != null)
+                                    {
+
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <a class="btn-success p-2" style="color:white" asp-controller="Home" asp-action="DownloadBook" asp-all-route-data="parms" onclick="reloadPage()">
+                                                Download
+                                            </a>
+                                            
+                                        }
+                                        else
+                                        {
+                                            <a class="btn-success p-2" style="color:white" asp-area="Authentication" asp-controller="Authentication" asp-action="Login">
+                                                Download
+                                            </a>
+                                        }
+                                      
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-success p-2" style="color:white" href="#">
+                                           Contact
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<div class="pagination text-center mb-5">
+    <span>
+        @if (currentPage > 1)
+        {
+            <a id="prev" class="index btn-success">Prev</a>
+        }
+        @for(int i = 1; i <= totalPage; i++)
+        {
+            if (i == currentPage)
+            {
+                <a>
+                    <div class="index text-success">@i</div>
+                </a>
+
+            }
+            else
+            {
+                <a>
+                    <div class="index">@i</div>
+                </a>
+            }
+        }
+        @if (currentPage < totalPage)
+        {
+            <a id="next" class="index btn-success">Next</a>
+        }   
+    </span>
+</div>
+
+<link rel="stylesheet" href="/css/pagination.css">
+<script src="/js/search-bar/choices.js"></script>
+@{
+    int nextPage = currentPage + 1;
+    int prevPage = currentPage - 1;
+}
+<script>
+   
+    var fullURL = window.location.href;
+    fullPrevURL = fullURL.slice(0, -1) + @prevPage;
+    fullNextURL = fullURL.slice(0, -1) + @nextPage;
+    var prevLink = document.getElementById("prev");
+    var nextLink = document.getElementById("next");
+    if (prevLink !== null) prevLink.href = fullPrevURL;
+    if (nextLink !== null) nextLink.href = fullNextURL;
+    const choices = new Choices('[data-trigger]',
+        {
+            searchEnabled: false,
+            itemSelectText: '',
+        });
+    
+
+    function reloadPage(){
+        console.log("refresing");
+        setTimeout(function () {
+            window.location.reload();
+        },200);
+    }
+
+</script>
+<!-- end furniture section -->

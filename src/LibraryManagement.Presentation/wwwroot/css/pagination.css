@@ -1,0 +1,22 @@
+@import url('https://rsms.me/inter/inter-ui.css');
+
+
+.pagination {
+    display: inline-block;
+    position: relative;
+}
+
+.index {
+    cursor: pointer;
+    display: inline;
+    margin-right: 29.5px;
+    padding: 5px;
+    user-select: none;
+    -moz-user-select: none;
+}
+
+    .index:last-child {
+        margin: 0;
+    }
+
+
